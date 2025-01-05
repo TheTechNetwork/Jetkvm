@@ -9,7 +9,7 @@ require (
 	github.com/beevik/ntp v1.3.1
 	github.com/coder/websocket v1.8.12
 	github.com/coreos/go-oidc/v3 v3.11.0
-	github.com/creack/pty v1.1.23
+	github.com/creack/pty v1.1.24
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.6.0
 	github.com/gwatts/rootcerts v0.0.0-20240401182218-3ab9db955caf
