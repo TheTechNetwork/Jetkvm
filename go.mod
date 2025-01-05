@@ -12,7 +12,7 @@ require (
 	github.com/creack/pty v1.1.23
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.6.0
-	github.com/gwatts/rootcerts v0.0.0-20240401182218-3ab9db955caf
+	github.com/gwatts/rootcerts v0.0.0-20250101202213-6b948e2b3fef
 	github.com/hanwen/go-fuse/v2 v2.5.1
 	github.com/openstadia/go-usb-gadget v0.0.0-20231115171102-aebd56bbb965
 	github.com/pion/logging v0.2.2
