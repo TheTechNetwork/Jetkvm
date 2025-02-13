@@ -2,7 +2,7 @@ module kvm
 
 go 1.21.0
 
-toolchain go1.21.1
+toolchain go1.23.6
 
 require (
 	github.com/Masterminds/semver/v3 v3.3.0
