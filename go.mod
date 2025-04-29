@@ -5,7 +5,7 @@ go 1.21.0
 toolchain go1.21.1
 
 require (
-	github.com/Masterminds/semver/v3 v3.3.0
+	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/beevik/ntp v1.3.1
 	github.com/coder/websocket v1.8.12
 	github.com/coreos/go-oidc/v3 v3.11.0
