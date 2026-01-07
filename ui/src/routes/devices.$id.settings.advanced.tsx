@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSettingsStore } from "@hooks/stores";
 import { JsonRpcError, JsonRpcResponse, useJsonRpc } from "@hooks/useJsonRpc";
 import { useDeviceUiNavigation } from "@hooks/useAppNavigation";
-import { Button } from "@components/Button";
+import { Button, LinkButton } from "@components/Button";
 import Checkbox, { CheckboxWithLabel } from "@components/Checkbox";
 import { ConfirmDialog } from "@components/ConfirmDialog";
 import { GridCard } from "@components/Card";
@@ -17,7 +17,7 @@ import { isOnDevice } from "@/main";
 import notifications from "@/notifications";
 import { m } from "@localizations/messages.js";
 import { sleep } from "@/utils";
-import { callJsonRpc, checkUpdateComponents, UpdateComponents } from "@/utils/jsonrpc";
+import { checkUpdateComponents, UpdateComponents } from "@/utils/jsonrpc";
 import { SystemVersionInfo } from "@hooks/useVersion";
 
 import { FeatureFlag } from "../components/FeatureFlag";
@@ -38,7 +38,6 @@ export default function SettingsAdvancedRoute() {
   const [resetConfig, setResetConfig] = useState(false);
   const [versionChangeAcknowledged, setVersionChangeAcknowledged] = useState(false);
   const [customVersionUpdateLoading, setCustomVersionUpdateLoading] = useState(false);
-  const [diagnosticsLoading, setDiagnosticsLoading] = useState(false);
   const settings = useSettingsStore();
 
   useEffect(() => {
@@ -191,51 +190,6 @@ export default function SettingsAdvancedRoute() {
     applyLoopbackOnlyMode(true);
     setShowLoopbackWarning(false);
   }, [applyLoopbackOnlyMode, setShowLoopbackWarning]);
-
-  const handleDownloadDiagnostics = useCallback(async () => {
-    setDiagnosticsLoading(true);
-
-    try {
-      const response = await callJsonRpc<string>({
-        method: "getDiagnostics",
-        attemptTimeoutMs: 20000, // 20s - diagnostics collects a lot of data
-        maxAttempts: 1,
-      });
-
-      if (response.error) {
-        notifications.error(
-          m.advanced_error_download_diagnostics({
-            error: response.error.data || m.unknown_error(),
-          }),
-        );
-        return;
-      }
-
-      const logContent = response.result;
-      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const filename = `jetkvm-diagnostics-${timestamp}.txt`;
-
-      const blob = new Blob([logContent], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      notifications.success(m.advanced_success_download_diagnostics());
-    } catch (error) {
-      notifications.error(
-        m.advanced_error_download_diagnostics({
-          error: error instanceof Error ? error.message : m.unknown_error(),
-        }),
-      );
-    } finally {
-      setDiagnosticsLoading(false);
-    }
-  }, []);
 
   const handleVersionUpdateError = useCallback((error?: JsonRpcError | string) => {
     notifications.error(
@@ -533,13 +487,13 @@ export default function SettingsAdvancedRoute() {
               title={m.advanced_download_diagnostics_title()}
               description={m.advanced_download_diagnostics_description()}
             >
-              <Button
+              <LinkButton
+                to="/diagnostics"
+                reloadDocument
+                download
                 size="SM"
-                disabled={diagnosticsLoading}
                 theme="light"
                 text={m.advanced_download_diagnostics_button()}
-                loading={diagnosticsLoading}
-                onClick={handleDownloadDiagnostics}
               />
             </SettingsItem>
           </NestedSettingsGroup>
